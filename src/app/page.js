@@ -75,7 +75,7 @@ export default function Home() {
             {/* Glass Card - Main Content */}
             <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-8 shadow-xl border border-white/20 max-w-2xl w-full">
               <h1 className="text-4xl font-bold mb-4">
-                Hi, My Name is <span className="rainbow-text">Destu Cikal</span>
+                Hi, My Name is <span className="rainbow-text">Elosalmon</span>
               </h1>
               <p className="text-gray-300 mb-6">
                 Welcome to my personal website! Feel free to explore and
