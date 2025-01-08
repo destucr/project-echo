@@ -2,13 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import ParticlesBackground from './components/ParticleBackground'; // Adjust the path as necessary
+import ParticlesBackground from './components/ParticleBackground';
 import axios from 'axios';
-
+import TestButton from './api/components/TestButton';
+import ApiResponse from './api/components/ApiResponse';
+import GifDisplay from './api/components/GifDisplay';
 
 export default function Home() {
+  // Group all state declarations at the top
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [githubData, setGithubData] = useState(null);
+  const [isClient, setIsClient] = useState(false);
+  const [apiResponse, setApiResponse] = useState(null);
+  const [showGif, setShowGif] = useState(false);
 
   // Fetch GitHub activity data on component mount
   useEffect(() => {
@@ -24,27 +30,30 @@ export default function Home() {
     fetchGithubActivity();
   }, []);
 
-  const [isClient, setIsClient] = useState(false);
-
+  // This useEffect ensures isClient is set after first render
   useEffect(() => {
-    setIsClient(true); // Only set this to true when on the client
+    setIsClient(true);
   }, []);
 
+  // In your page.js, update the handleTestButtonClick:
+  const handleTestButtonClick = () => {
+    setApiResponse('Ome5... 🚀');
+    setShowGif(true);
+  };
+
+  // Prevent rendering on server-side
   if (!isClient) {
-    return null; // Return nothing on the server side
+    return null;
   }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Particles Background */}
+      {/* Rest of the component remains the same */}
       <ParticlesBackground />
 
-      {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative z-10">
-        {/* Navigation */}
         <nav className="fixed w-full z-50 px-8 py-4 bg-transparent">
           <div className="flex justify-end items-center">
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="sm:hidden text-white p-2 hover:bg-white/10 rounded-lg"
@@ -52,76 +61,41 @@ export default function Home() {
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            {/* Desktop Navigation */}
             <div className="hidden sm:flex gap-6 text-white">
-              <a href="#about" className="hover:text-gray-300 transition-colors">
-                About
-              </a>
-              <a
-                href="#projects"
-                className="hover:text-gray-300 transition-colors"
-              >
-                Projects
-              </a>
-              <a href="#contact" className="hover:text-gray-300 transition-colors">
-                Contact
-              </a>
+              <a href="#about" className="hover:text-gray-300 transition-colors">About</a>
+              <a href="#projects" className="hover:text-gray-300 transition-colors">Projects</a>
+              <a href="#contact" className="hover:text-gray-300 transition-colors">Contact</a>
             </div>
 
-            {/* Mobile Menu */}
             {isMenuOpen && (
               <div className="absolute top-16 right-4 sm:hidden bg-black/80 rounded-lg p-4 shadow-lg w-48 text-white">
-                <a
-                  href="#about"
-                  className="block mb-4 hover:text-gray-300 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About
-                </a>
-                <a
-                  href="#projects"
-                  className="block mb-4 hover:text-gray-300 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Projects
-                </a>
-                <a
-                  href="#contact"
-                  className="block hover:text-gray-300 transition-colors"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Contact
-                </a>
+                <a href="#about" className="block mb-4 hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a>
+                <a href="#projects" className="block mb-4 hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Projects</a>
+                <a href="#contact" className="block hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a>
               </div>
             )}
           </div>
         </nav>
 
-        {/* Content Section */}
         <div className="grid min-h-screen p-8 pb-20 gap-16 sm:p-20 place-items-center">
           <main className="flex flex-col gap-8 items-center sm:items-start">
-            {/* Glass Card - Main Content */}
             <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-8 shadow-xl border border-white/20 max-w-2xl w-full">
               <h1 className="text-4xl font-bold mb-4">
                 Hi, My Name is <span className="rainbow-text">Elosalmon</span>
               </h1>
               <p className="text-gray-300 mb-6">
-                Welcome to my personal website! Feel free to explore and discover
-                more.
+                Welcome to my personal website! Feel free to explore and discover more.
               </p>
 
-              {/* API Test Section */}
               <div className="backdrop-blur-md bg-black/30 rounded-lg p-4 border border-white/10">
-                <h2 className="text-xl font-semibold mb-2 text-white">
-                  API Test Endpoint
-                </h2>
-                <code className="block bg-black/50 text-green-400 p-2 rounded">
-                  GET /api/test
-                </code>
+                <h2 className="text-xl font-semibold mb-2 text-white">API Test Endpoint</h2>
+                <code className="block bg-black/50 text-green-400 p-2 rounded">GET /api/test</code>
+                <TestButton onClick={handleTestButtonClick} />
+                <ApiResponse message={apiResponse} />
+                {showGif && <GifDisplay />}
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex gap-4 items-center flex-col sm:flex-row mt-6">
               <a
                 className="rounded-full backdrop-blur-md bg-white/10 border border-white/20 transition-all px-6 py-3 text-white hover:bg-white/20"
@@ -140,12 +114,9 @@ export default function Home() {
             </div>
           </main>
 
-          {/* GitHub Activity Section (Separate) */}
           {githubData && (
             <div className="backdrop-blur-md bg-gradient-to-br from-green-400 via-green-600 to-green-800 rounded-xl p-6 border border-white/20 shadow-lg">
-              <h2 className="text-2xl font-bold text-white mb-4">
-                Latest GitHub Activity
-              </h2>
+              <h2 className="text-2xl font-bold text-white mb-4">Latest GitHub Activity</h2>
               <ul className="list-none space-y-3">
                 {githubData.slice(0, 5).map((event, index) => (
                   <li key={index} className="flex items-center gap-2 text-white text-lg font-medium">
@@ -161,8 +132,6 @@ export default function Home() {
             </div>
           )}
 
-
-          {/* Footer */}
           <footer className="flex gap-6 items-center justify-center text-gray-400">
             <div className="backdrop-blur-sm bg-black/20 px-4 py-2 rounded-full">
               Made with Next.js & Tailwind CSS
