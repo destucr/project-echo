@@ -24,5 +24,6 @@ jobs:
         instance_name: 'project-echo'
         zone: 'asia-southeast1-b'
         ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
+        user: 'destucr'
         command: 'bash /home/destucr/project-echo/deploy.sh'
         debug: true 
