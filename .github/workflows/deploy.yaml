@@ -26,4 +26,3 @@ jobs:
         ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
         user: 'destucr'
         command: 'bash /home/destucr/project-echo/deploy.sh'
-        debug: true 
