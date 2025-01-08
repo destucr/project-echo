@@ -1,10 +1,38 @@
-"use client";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
-import ParticlesBackground from "./components/ParticleBackground"; // Adjust the path as necessary
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
+import ParticlesBackground from './components/ParticleBackground'; // Adjust the path as necessary
+import axios from 'axios';
+
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [githubData, setGithubData] = useState(null);
+
+  // Fetch GitHub activity data on component mount
+  useEffect(() => {
+    const fetchGithubActivity = async () => {
+      try {
+        const response = await axios.get('https://api.github.com/users/destucr/events');
+        setGithubData(response.data);
+      } catch (error) {
+        console.error('Error fetching GitHub activity:', error);
+      }
+    };
+
+    fetchGithubActivity();
+  }, []);
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true); // Only set this to true when on the client
+  }, []);
+
+  if (!isClient) {
+    return null; // Return nothing on the server side
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -78,8 +106,8 @@ export default function Home() {
                 Hi, My Name is <span className="rainbow-text">Elosalmon</span>
               </h1>
               <p className="text-gray-300 mb-6">
-                Welcome to my personal website! Feel free to explore and
-                discover more.
+                Welcome to my personal website! Feel free to explore and discover
+                more.
               </p>
 
               {/* API Test Section */}
@@ -100,7 +128,6 @@ export default function Home() {
                 href="https://github.com/destucr"
                 target="_blank"
                 rel="noopener noreferrer"
-
               >
                 View Projects
               </a>
@@ -112,6 +139,28 @@ export default function Home() {
               </a>
             </div>
           </main>
+
+          {/* GitHub Activity Section (Separate) */}
+          {githubData && (
+            <div className="backdrop-blur-md bg-gradient-to-br from-green-400 via-green-600 to-green-800 rounded-xl p-6 border border-white/20 shadow-lg">
+              <h2 className="text-2xl font-bold text-white mb-4">
+                Latest GitHub Activity
+              </h2>
+              <ul className="list-none space-y-3">
+                {githubData.slice(0, 5).map((event, index) => (
+                  <li key={index} className="flex items-center gap-2 text-white text-lg font-medium">
+                    <div className="flex-shrink-0 bg-black/30 rounded-full p-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-git" viewBox="0 0 16 16">
+                        <path d="M8 4.5l4 4-1 1L9 7V4h5V2H8v2.5zM5.5 4L9 7V4.5l2 2-4 4-1-1 2-2L5.5 4z" />
+                      </svg>
+                    </div>
+                    <span className="flex-1">{event.type} - <span className="text-green-300">{event.repo.name}</span></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
 
           {/* Footer */}
           <footer className="flex gap-6 items-center justify-center text-gray-400">
