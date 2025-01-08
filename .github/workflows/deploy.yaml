@@ -24,13 +24,4 @@ jobs:
         instance_name: 'project-echo'
         zone: 'asia-southeast1-b'
         ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
-
-  # Step 4: Add the server to known hosts (required for SSH connection)
-    - name: Add server to known hosts
-      run: |
-        ssh-keyscan -H '${{secrets.SERVER_IP}}' >> ~/.ssh/known_hosts
-
-    # Step 5: SSH into the remote server and run the deploy script
-    - name: Run deploy script on Compute Engine
-      run: |
-        ssh -o StrictHostKeyChecking=no destucr@'${{secrets.SERVER_IP}} "cd /home/destucr/project-echo && ./deploy.sh"
+        command: '/home/destucr/project-echo/deploy.sh'
