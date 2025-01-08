@@ -7,7 +7,7 @@ on:
   workflow_dispatch:  # Allows manual trigger of the workflow
 
 jobs:
-  job_id:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
