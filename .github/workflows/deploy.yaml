@@ -30,4 +30,4 @@ jobs:
       # Step 4: SSH into the server and run the deploy script
       - name: Run deploy script on server
         run: |
-          ssh -o StrictHostKeyChecking=no {{secrets.SERVER_USER}}@${{ secrets.SERVER_IP }} "chmod +x /home/destucr/project-echo/deploy.sh && /home/destucr/project-echo/deploy.sh"
+          ssh -o StrictHostKeyChecking=no destucr@${{ secrets.SERVER_IP }} "chmod +x /home/destucr/project-echo/deploy.sh && /home/destucr/project-echo/deploy.sh"
