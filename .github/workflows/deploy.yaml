@@ -15,20 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Bun (Install Bun if not already installed on the runner)
-      - name: Set up Bun
-        run: |
-          curl -fsSL https://bun.sh/install | bash
-          echo "$HOME/.bun/bin" >> $GITHUB_PATH
-
-      # Step 3: Set up SSH keys to authenticate with the server
+      # Step 2: Set up SSH keys to authenticate with the server
       - name: Set up SSH keys
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your private SSH key in GitHub Secrets
 
-      # Step 4: Run the deploy.sh script
-      - name: Run deploy script
+      # Step 3: Ensure the server's SSH key is added to known_hosts
+      - name: Add server to known hosts
         run: |
-          chmod +x deploy.sh
-          ./deploy.sh
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+      # Step 4: SSH into the server and run the deploy script
+      - name: Run deploy script on server
+        run: |
+          ssh -o StrictHostKeyChecking=no {{secrets.SERVER_USER}}@${{ secrets.SERVER_IP }} "chmod +x /home/destucr/project-echo/deploy.sh && /home/destucr/project-echo/deploy.sh"
