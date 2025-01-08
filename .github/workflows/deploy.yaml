@@ -1,0 +1,34 @@
+name: Deploy Next.js app using Bun
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual trigger of the workflow
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Bun (Install Bun if not already installed on the runner)
+      - name: Set up Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> $GITHUB_PATH
+
+      # Step 3: Set up SSH keys to authenticate with the server
+      - name: Set up SSH keys
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Add your private SSH key in GitHub Secrets
+
+      # Step 4: Run the deploy.sh script
+      - name: Run deploy script
+        run: |
+          chmod +x deploy.sh
+          ./deploy.sh
