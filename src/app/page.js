@@ -1,23 +1,24 @@
-
 'use client';
 
-import { useState, useEffect, memo } from 'react';
-import { Menu, X } from 'lucide-react';
-import ParticlesBackground from './components/ParticleBackground';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Menu, X, Github, Mail, Activity, Code, Terminal } from 'lucide-react';
 import axios from 'axios';
 import TestButton from './api/components/TestButton';
 import ApiResponse from './api/components/ApiResponse';
 import GifDisplay from './api/components/GifDisplay';
+import TriangleShader from './components/TriangleShader';
+
+// Memoize components that don't need to re-render
+const MemoizedTestButton = React.memo(TestButton);
+const MemoizedGifDisplay = React.memo(GifDisplay);
 
 export default function Home() {
-  // Group all state declarations at the top
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [githubData, setGithubData] = useState(null);
   const [isClient, setIsClient] = useState(false);
   const [apiResponse, setApiResponse] = useState(null);
   const [showGif, setShowGif] = useState(false);
 
-  // Fetch GitHub activity data on component mount
   useEffect(() => {
     const fetchGithubActivity = async () => {
       try {
@@ -31,33 +32,29 @@ export default function Home() {
     fetchGithubActivity();
   }, []);
 
-  // This useEffect ensures isClient is set after first render
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // In your page.js, update the handleTestButtonClick:
   const handleTestButtonClick = () => {
-    setApiResponse('Ome5... 🚀');
+    setApiResponse('Ome5... 😝');
     setShowGif(true);
   };
 
   const handleClose = () => {
-    setApiResponse(''); // Clear the API response
-    setShowGif(false);  // Hide the GIF
+    setApiResponse('');
+    setShowGif(false);
   };
 
-  // Prevent rendering on server-side
-  if (!isClient) {
-    return null;
-  }
+  if (!isClient) return null;
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Rest of the component remains the same */}
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative z-10">
-        <nav className="fixed w-full z-50 px-8 py-4 bg-transparent">
-          <div className="flex justify-end items-center">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative">
+      {/* Navigation */}
+      <nav className="fixed w-full z-50 px-8 py-4 bg-black/20 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <span className="text-white font-bold text-xl"></span>
+          <div className="flex items-center gap-6">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="sm:hidden text-white p-2 hover:bg-white/10 rounded-lg"
@@ -70,78 +67,107 @@ export default function Home() {
               <a href="#projects" className="hover:text-gray-300 transition-colors">Projects</a>
               <a href="#contact" className="hover:text-gray-300 transition-colors">Contact</a>
             </div>
+          </div>
+        </div>
+      </nav>
 
-            {isMenuOpen && (
-              <div className="absolute top-16 right-4 sm:hidden bg-black/80 rounded-lg p-4 shadow-lg w-48 text-white">
-                <a href="#about" className="block mb-4 hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a>
-                <a href="#projects" className="block mb-4 hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Projects</a>
-                <a href="#contact" className="block hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a>
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed top-16 right-0 left-0 z-40 sm:hidden bg-black/95 backdrop-blur-lg border-b border-white/10">
+          <div className="p-4 flex flex-col items-center gap-4">
+            <a href="#about" className="text-white hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>About</a>
+            <a href="#projects" className="text-white hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Projects</a>
+            <a href="#contact" className="text-white hover:text-gray-300 transition-colors" onClick={() => setIsMenuOpen(false)}>Contact</a>
+          </div>
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div className="pt-24 px-4 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column */}
+          <div className="space-y-8">
+            {/* Hero Section */}
+            <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-8 shadow-xl border border-white/20">
+              <h1 className="text-5xl font-bold mb-4">
+                Hi, I'm <span className="rainbow-text">Elosalmon</span>
+              </h1>
+              <p className="text-gray-300 text-lg mb-6">
+                Welcome to my personal website! Feel free to explore and discover more.
+              </p>
+              <div className="flex gap-4 flex-wrap">
+                <a
+                  className="rounded-full backdrop-blur-md bg-white/10 border border-white/20 transition-all px-6 py-3 text-white hover:bg-white/20 flex items-center gap-2"
+                  href="https://github.com/destucr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Github size={20} />
+                  View Projects
+                </a>
+                <a
+                  className="rounded-full backdrop-blur-md bg-black/30 border border-white/10 transition-all px-6 py-3 text-white hover:bg-black/50 flex items-center gap-2"
+                  href="#contact"
+                >
+                  <Mail size={20} />
+                  Contact Me
+                </a>
+              </div>
+            </div>
+
+            {/* API Test Section */}
+            <div className="backdrop-blur-lg bg-black/40 rounded-2xl p-8 border border-white/10 shadow-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Terminal size={24} className="text-green-400" />
+                <h2 className="text-xl font-semibold text-white">API Test Endpoint</h2>
+              </div>
+              <code className="block bg-black/50 text-green-400 p-4 rounded-lg mb-4">GET /api/test</code>
+              <TestButton onClick={handleTestButtonClick} />
+              {apiResponse && <p className="mt-4 text-white">{apiResponse}</p>}
+              {showGif && <GifDisplay onClose={handleClose} />}
+            </div>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-8">
+            {/* Triangle Shader */}
+            <div className="backdrop-blur-lg bg-black/40 rounded-2xl p-6 border border-white/10 shadow-xl">
+              <div className="flex items-center gap-2 mb-4">
+                <Code size={24} className="text-blue-400" />
+                <h2 className="text-xl font-semibold text-white">WebGL Shader</h2>
+              </div>
+              <TriangleShader />
+            </div>
+
+            {/* GitHub Activity */}
+            {githubData && (
+              <div className="backdrop-blur-lg bg-black/40 rounded-2xl p-8 border border-white/10 shadow-xl">
+                <div className="flex items-center gap-2 mb-6">
+                  <Activity size={24} className="text-green-400" />
+                  <h2 className="text-xl font-semibold text-white">Latest GitHub Activity</h2>
+                </div>
+                <ul className="space-y-4">
+                  {githubData.slice(0, 5).map((event, index) => (
+                    <li key={index} className="bg-black/30 rounded-lg p-4 text-white">
+                      <div className="flex items-center gap-2">
+                        <Github size={16} />
+                        <span className="text-green-400">{event.type}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-gray-300">{event.repo.name}</p>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
-        </nav>
-
-        <div className="grid min-h-screen p-8 pb-20 gap-16 sm:p-20 place-items-center">
-          <main className="flex flex-col gap-8 items-center sm:items-start">
-            <div className="backdrop-blur-lg bg-white/10 rounded-2xl p-8 shadow-xl border border-white/20 max-w-2xl w-full">
-              <h1 className="text-4xl font-bold mb-4">
-                Hi, My Name is <span className="rainbow-text">Elosalmon</span>
-              </h1>
-              <p className="text-gray-300 mb-6">
-                Welcome to my personal website! Feel free to explore and discover more.
-              </p>
-
-              <div className="backdrop-blur-md bg-black/30 rounded-lg p-4 border border-white/10">
-                <h2 className="text-xl font-semibold mb-2 text-white">API Test Endpoint</h2>
-                <code className="block bg-black/50 text-green-400 p-2 rounded">GET /api/test</code>
-                <TestButton onClick={handleTestButtonClick} />
-                {apiResponse && <p className="mt-2 text-white">{apiResponse}</p>}
-                {showGif && <GifDisplay onClose={handleClose} />}
-              </div>
-            </div>
-
-            <div className="flex gap-4 items-center flex-col sm:flex-row mt-6">
-              <a
-                className="rounded-full backdrop-blur-md bg-white/10 border border-white/20 transition-all px-6 py-3 text-white hover:bg-white/20"
-                href="https://github.com/destucr"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View Projects
-              </a>
-              <a
-                className="rounded-full backdrop-blur-md bg-black/30 border border-white/10 transition-all px-6 py-3 text-white hover:bg-black/50"
-                href="#contact"
-              >
-                Contact Me
-              </a>
-            </div>
-          </main>
-
-          {githubData && (
-            <div className="backdrop-blur-md bg-gradient-to-br from-green-400 via-green-600 to-green-800 rounded-xl p-6 border border-white/20 shadow-lg">
-              <h2 className="text-2xl font-bold text-white mb-4">Latest GitHub Activity</h2>
-              <ul className="list-none space-y-3">
-                {githubData.slice(0, 5).map((event, index) => (
-                  <li key={index} className="flex items-center gap-2 text-white text-lg font-medium">
-                    <div className="flex-shrink-0 bg-black/30 rounded-full p-1">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-git" viewBox="0 0 16 16">
-                        <path d="M8 4.5l4 4-1 1L9 7V4h5V2H8v2.5zM5.5 4L9 7V4.5l2 2-4 4-1-1 2-2L5.5 4z" />
-                      </svg>
-                    </div>
-                    <span className="flex-1">{event.type} - <span className="text-green-300">{event.repo.name}</span></span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <footer className="flex gap-6 items-center justify-center text-gray-400">
-            <div className="backdrop-blur-sm bg-black/20 px-4 py-2 rounded-full">
-              Made with Next.js & Tailwind CSS
-            </div>
-          </footer>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-16 mb-8 text-center">
+          <div className="inline-block backdrop-blur-sm bg-black/20 px-6 py-3 rounded-full text-gray-400">
+            Made with Next.js & Tailwind CSS
+          </div>
+        </footer>
       </div>
     </div>
   );
