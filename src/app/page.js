@@ -1,6 +1,7 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { Menu, X } from 'lucide-react';
 import ParticlesBackground from './components/ParticleBackground';
 import axios from 'axios';
@@ -41,6 +42,11 @@ export default function Home() {
     setShowGif(true);
   };
 
+  const handleClose = () => {
+    setApiResponse(''); // Clear the API response
+    setShowGif(false);  // Hide the GIF
+  };
+
   // Prevent rendering on server-side
   if (!isClient) {
     return null;
@@ -49,8 +55,6 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Rest of the component remains the same */}
-      <ParticlesBackground />
-
       <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black relative z-10">
         <nav className="fixed w-full z-50 px-8 py-4 bg-transparent">
           <div className="flex justify-end items-center">
@@ -91,8 +95,8 @@ export default function Home() {
                 <h2 className="text-xl font-semibold mb-2 text-white">API Test Endpoint</h2>
                 <code className="block bg-black/50 text-green-400 p-2 rounded">GET /api/test</code>
                 <TestButton onClick={handleTestButtonClick} />
-                <ApiResponse message={apiResponse} />
-                {showGif && <GifDisplay />}
+                {apiResponse && <p className="mt-2 text-white">{apiResponse}</p>}
+                {showGif && <GifDisplay onClose={handleClose} />}
               </div>
             </div>
 
