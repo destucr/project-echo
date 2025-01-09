@@ -6,9 +6,9 @@ const TestButton = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="mt-4 p-1 px-4 rounded-[8px] bg-gradient-to-r from-teal-400 to-blue-500 text-white font-semibold backdrop-blur-lg shadow-lg hover:scale-105 transition-all"
+      className="group relative px-8 py-3 bg-transparent border border-[var(--primary)] hover:bg-[var(--primary)] transition-all text-center"
     >
-      Test Now
+      <span className="relative z-10 text-[var(--primary)] group-hover:text-white">For Surprise</span>
     </button>
   );
 };
