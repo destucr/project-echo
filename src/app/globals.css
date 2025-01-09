@@ -3,80 +3,51 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --primary: #00b4d8;
+  --secondary: #00df9a;
+  --neutral: #171717;
+  --accent: #7209b7;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* styles/globals.css */
-@keyframes rainbow {
-  0% {
-    background-position: 0%;
-  }
-
-  100% {
-    background-position: 100%;
-  }
+.text-accent {
+  color: var(--accent);
 }
 
-/* styles/globals.css */
-@keyframes rainbow {
-  0% {
-    background-position: 0%;
-  }
-
-  100% {
-    background-position: 100%;
-  }
+.bg-accent {
+  background-color: var(--accent);
 }
 
-/* styles/globals.css */
-@keyframes rainbow {
-  0% {
-    background-position: 0%;
-  }
+.shadow-light {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
 
-  100% {
-    background-position: 400%;
-    /* Adjust for seamless loop */
-  }
+.shadow-heavy {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
 }
 
 .rainbow-text {
-  background: linear-gradient(270deg,
-      #6a5acd,
-      /* Slate Blue */
-      #7b68ee,
-      /* Medium Slate Blue */
-      #00bfff,
-      /* Deep Sky Blue */
-      #3cb371,
-      /* Medium Sea Green */
-      #ff6347,
-      /* Tomato */
-      #ff8c00,
-      /* Dark Orange */
-      #ff1493,
-      /* Deep Pink */
-      #9370db,
-      /* Medium Purple */
-      #6a5acd
-      /* Seamless loop: repeat starting color */
-    );
-  background-size: 400%;
+  background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: rainbow 10s linear infinite;
+  background-size: 200%;
+}
+
+.bg-gradient-light {
+  background: linear-gradient(135deg, var(--neutral), var(--background));
+}
+
+@media (max-width: 768px) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
