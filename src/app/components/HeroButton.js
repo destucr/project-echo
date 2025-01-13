@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-const TestButton = ({ onClick }) => {
+const HeroButton = ({ onClick }) => {
   return (
     <button
       onClick={onClick}
@@ -13,4 +13,4 @@ const TestButton = ({ onClick }) => {
   );
 };
 
-export default React.memo(TestButton);
+export default React.memo(HeroButton);
